@@ -1,12 +1,9 @@
 import openpyxl
-import re
+
 import json
 
-whitespaceRe = re.compile('^\s*$')
-
-
-def openWorkbook(workbookName):
-    return openpyxl.load_workbook(filename=workbookName, read_only=True, data_only=True)
+from .cellOperations import isEmptyCell, isChildMergedCell, getCellValue
+from .rowOperations import parseRow
 
 
 def parseHeaders(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
@@ -38,73 +35,6 @@ def parseHeaders(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
         returnArray.pop()
 
     return returnArray
-
-
-def isChildMergedCell(cell):
-    if isinstance(cell, openpyxl.cell.read_only.EmptyCell):
-        return False
-    elif isinstance(cell, openpyxl.cell.read_only.ReadOnlyCell):
-        if cell.value is None:
-            return True
-        else:
-            return False
-    else:
-        raise Exception(
-            "Code has reached a state it shouldn't be able to. Cell has type: {}".format(type(cell)))
-
-
-def isEmptyCell(cell):
-    if isinstance(cell, openpyxl.cell.read_only.EmptyCell):
-        return True
-    else:
-        cellValue = getCellValue(cell)
-
-        if cellValue is None:
-            return True
-        elif isinstance(cellValue, str):
-            if whitespaceRe.match(cellValue) is None:
-                return False
-            else:
-                return True
-        else:
-            return False
-
-
-def getCellValue(cell):
-    if isChildMergedCell(cell):
-        return getCellValue(cell.parent.cell(row=cell.row, column=(cell.column - 1)))
-    else:
-        return cell.value
-
-
-def insertIntoDict(targetDict, headerArray, value):
-    if len(headerArray) == 1:
-        targetDict[headerArray[0]] = value
-
-        return targetDict
-    else:
-        nextHeader = headerArray[-1]
-
-        if nextHeader not in targetDict:
-            targetDict[nextHeader] = {}
-
-        nextDict = targetDict[nextHeader]
-
-        targetDict[nextHeader] = insertIntoDict(
-            nextDict, headerArray[:-1], value)
-
-        return targetDict
-
-
-def parseRow(headerArray, rowarray):
-    rowDict = {}
-
-    for cellIndex in range(len(headerArray)):
-        if headerArray[cellIndex] is not None:
-            insertIntoDict(
-                rowDict, headerArray[cellIndex], rowarray[cellIndex].value)
-
-    return rowDict
 
 
 def parseSheet(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
