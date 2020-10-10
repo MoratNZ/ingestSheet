@@ -47,7 +47,7 @@ def parseSheet(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
         labelCell = sheet.cell(row=rowIndex, column=headerColumnCount)
 
         if isEmptyCell(labelCell):
-            next
+            continue
 
         rowLabel = labelCell.value
 
