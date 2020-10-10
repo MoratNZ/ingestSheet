@@ -6,15 +6,15 @@ except ImportError:
 
 config = {
     'description': 'My Project',
-    'author': 'My Name',
+    'author': 'David Maclagan',
     'url': 'URL to get it at.',
     'download_url': 'Where to download it.',
-    'author_email': 'My email.',
+    'author_email': 'david@verso.org.',
     'version': '0.1',
-    'install_requires': ['nose'],
+    'install_requires': ['openpyxl'],
     'packages': ['ingestSheet'],
     'scripts': [],
-    'name': 'projectname'
+    'name': 'ingestSheet'
 }
 
 setup(**config)
