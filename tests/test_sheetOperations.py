@@ -75,6 +75,53 @@ class TestSomething(unittest.TestCase):
 
         # TODO need more tests
 
+    def test_insertIntoDict(self):
+        headerArray = ['first', 'second', 'third']
+
+        result = ingestSheet.insertIntoDict({}, headerArray, "value")
+
+        self.assertDictEqual(
+            result, {'third': {'second': {'first': 'value'}}}, msg=result)
+
+        result2 = ingestSheet.insertIntoDict(
+            {'third': {}}, headerArray, "value")
+
+        self.assertDictEqual(
+            result2, {'third': {'second': {'first': 'value'}}}, msg=result)
+
+        result3 = ingestSheet.insertIntoDict(
+            {'third': {}, 'steve': 'foo'}, headerArray, "value")
+
+        self.assertDictEqual(
+            result3, {'third': {'second': {'first': 'value'}}, 'steve': 'foo'}, msg=result)
+
+    def test_parseRow(self):
+        book = ingestSheet.openWorkbook(TEST_SHEET)
+
+        sheet = book['Sheet1']
+
+        headers = ingestSheet.parseHeaders(sheet, headerRowCount=2)
+
+        row1 = sheet[3]
+        result1 = ingestSheet.parseRow(headers, row1)
+        self.assertDictEqual(result1, {'parent one': {'child one': 1}, 'parent two': {'child one': 3, 'child two': 6,
+                                                                                      'child three': 9}, 'parent three': {'child one': 11, 'child two': 14}, 'no parent': 17, 'no children': 20})
+
+        row2 = sheet[4]
+        result2 = ingestSheet.parseRow(headers, row2)
+        self.assertDictEqual(result2, {'parent one': {'child one': 2}, 'parent two': {'child one': 4, 'child two': 7,
+                                                                                      'child three': None}, 'parent three': {'child one': 12, 'child two': 15}, 'no parent': 18, 'no children': 21})
+
+    def test_parseSheet(self):
+        book = ingestSheet.openWorkbook(TEST_SHEET)
+
+        sheet = book['Sheet1']
+
+        result = ingestSheet.parseSheet(sheet, headerRowCount=2)
+
+        self.assertDictEqual(result, {'row one': {'parent one': {'child one': 1}, 'parent two': {'child one': 3, 'child two': 6, 'child three': 9}, 'parent three': {'child one': 11, 'child two': 14}, 'no parent': 17, 'no children': 20}, 'row two': {'parent one': {'child one': 2}, 'parent two': {'child one': 4, 'child two': 7, 'child three': None}, 'parent three': {'child one': 12, 'child two': 15}, 'no parent': 18, 'no children': 21}, 'row three': {
+                             'parent one': {'child one': None}, 'parent two': {'child one': 5, 'child two': 7, 'child three': 10}, 'parent three': {'child one': 13, 'child two': 16}, 'no parent': 19, 'no children': 22}, None: {'parent one': {'child one': None}, 'parent two': {'child one': None, 'child two': None, 'child three': None}, 'parent three': {'child one': None, 'child two': None}, 'no parent': None, 'no children': None}})
+
 
 if __name__ == '__main__':
     unittest.main()

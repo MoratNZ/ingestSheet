@@ -1,5 +1,6 @@
 import openpyxl
 import re
+import json
 
 whitespaceRe = re.compile('^\s*$')
 
@@ -15,7 +16,7 @@ def parseHeaders(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
     returnArray = []
 
     for i in range(headerColumnCount):
-        returnArray.append([])
+        returnArray.append(None)
 
     while True:
         columnArray = []
@@ -74,3 +75,54 @@ def getCellValue(cell):
         return getCellValue(cell.parent.cell(row=cell.row, column=(cell.column - 1)))
     else:
         return cell.value
+
+
+def insertIntoDict(targetDict, headerArray, value):
+    if len(headerArray) == 1:
+        targetDict[headerArray[0]] = value
+
+        return targetDict
+    else:
+        nextHeader = headerArray[-1]
+
+        if nextHeader not in targetDict:
+            targetDict[nextHeader] = {}
+
+        nextDict = targetDict[nextHeader]
+
+        targetDict[nextHeader] = insertIntoDict(
+            nextDict, headerArray[:-1], value)
+
+        return targetDict
+
+
+def parseRow(headerArray, rowarray):
+    rowDict = {}
+
+    for cellIndex in range(len(headerArray)):
+        if headerArray[cellIndex] is not None:
+            insertIntoDict(
+                rowDict, headerArray[cellIndex], rowarray[cellIndex].value)
+
+    return rowDict
+
+
+def parseSheet(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
+    result = {}
+
+    headers = parseHeaders(sheet, headerRowCount,
+                           headerColumnCount, maxColumnGap)
+
+    for rowIndex in range(headerRowCount + 1, sheet.max_row):
+        labelCell = sheet.cell(row=rowIndex, column=headerColumnCount)
+
+        if isEmptyCell(labelCell):
+            next
+
+        rowLabel = labelCell.value
+
+        rowDict = parseRow(headers, sheet[rowIndex])
+
+        result[rowLabel] = rowDict
+
+    return result
