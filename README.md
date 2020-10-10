@@ -6,7 +6,11 @@ The motivation for this is a stepping stone between config lists held in Excel, 
 
 ## Expected sheet format
 
-![expeected sheet format](/docs/spreadshed_example.png)
+![expeected sheet format](https://github.com/MoratNZ/ingestSheet/blob/master/docs/spreadsheet_example.png)
+
+There are two header rows (more or less can be used as required), with higher rows being parents of lower rows, and cell merges being used to show which children are associateed with which parents.
+
+Below the header rows are three data rows, where the first column contains the label for that row.
 
 This results in:
 
