@@ -1,4 +1,16 @@
 def insertIntoDict(targetDict, headerArray, value):
+    """Inserts a value into a dict, either directly, or via one or more child dicts. 
+
+    If those child dicts don't exist, they're silently created.
+
+    Args:
+        targetDict (dict): The dict the value needs to be inserted into
+        headerArray (list): An array of one or more strings, those strings being the keys / subkeys to associate the value with
+        value (any): The value to be inserted into the dict
+
+    Returns:
+        dict: The dictt passed in, now with the value inserted into the appropriate place in its child hierachy
+    """
     if len(headerArray) == 1:
         targetDict[headerArray[0]] = value
 

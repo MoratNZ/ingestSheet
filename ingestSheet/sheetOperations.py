@@ -7,6 +7,17 @@ from .rowOperations import parseRow
 
 
 def parseHeaders(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
+    """[summary]
+
+    Args:
+        sheet ([type]): [description]
+        headerRowCount (int, optional): [description]. Defaults to 1.
+        headerColumnCount (int, optional): [description]. Defaults to 1.
+        maxColumnGap (int, optional): [description]. Defaults to 1.
+
+    Returns:
+        list of lists: [description]
+    """
     currentColumn = headerColumnCount + 1
     blankColumns = 0
 
