@@ -6,13 +6,24 @@ The motivation for this is a stepping stone between config lists held in Excel, 
 
 ## Expected sheet format
 
+Assuming that you have a sheet example.xlsx formatted like so:
+
 ![expeected sheet format](https://github.com/MoratNZ/ingestSheet/blob/master/docs/spreadsheet_example.png)
 
 There are two header rows (more or less can be used as required), with higher rows being parents of lower rows, and cell merges being used to show which children are associateed with which parents.
 
 Below the header rows are three data rows, where the first column contains the label for that row.
 
-This results in:
+The most basic use of ingestSheet involves opening an Excel workbook, selecting a worksheet, and then importing the contents of it:
+
+```
+>>> import ingestSheet
+>>> book = ingestSheet.openWorkbook("example.xlsx")
+>>> sheet1 = book['Sheet1']
+>>> ingestSheet.parseSheet(sheet1, headerRowCount=2)
+```
+
+This returns:
 
 ```
  'row one': {'no children': 20,
