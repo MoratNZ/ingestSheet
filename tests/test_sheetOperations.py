@@ -13,23 +13,48 @@ class TestSheetOperations(unittest.TestCase):
     def test_parseHeaders(self):
         book = workbookOperations.openWorkbook(TEST_SHEET)
 
-        sheet = book['Sheet1']
+        sheet1 = book['Sheet1']
 
-        headers = sheetOperations.parseHeaders(sheet, lastHeaderRow=2)
+        headers = sheetOperations.parseHeaders(sheet1, lastHeaderRow=2)
 
         self.assertEqual(len(headers), 9)
+        self.assertCountEqual(headers, [None, ['child one', 'parent one'], ['child one', 'parent two'], ['child two', 'parent two'], [
+                              'child three', 'parent two'], ['child one', 'parent three'], ['child two', 'parent three'], ['no parent'], ['no children']])
+        sheet2 = book['Sheet2']
+        headers2 = sheetOperations.parseHeaders(
+            sheet2, firstHeaderRow=4, lastHeaderRow=5)
 
-        # TODO need more tests
+        self.assertEqual(len(headers), 9)
+        self.assertCountEqual(headers2, [None, ['child one', 'parent one'], ['child one', 'parent two'], ['child two', 'parent two'], [
+                              'child three', 'parent two'], ['child one', 'parent three'], ['child two', 'parent three'], ['no parent'], ['no children']])
+
+        headers3 = sheetOperations.parseHeaders(
+            sheet2, firstHeaderRow=4, lastHeaderRow=5, camelCaseHeaders=True)
+
+        self.assertEqual(len(headers), 9)
+        self.assertCountEqual(headers3, [None, ['childOne', 'parentOne'], ['childOne', 'parentTwo'], ['childTwo', 'parentTwo'], [
+                              'childThree', 'parentTwo'], ['childOne', 'parentThree'], ['childTwo', 'parentThree'], ['noParent'], ['noChildren']])
 
     def test_parseSheet(self):
+        expectedResult = {'row one': {'parent one': {'child one': 1}, 'parent two': {'child one': 3, 'child two': 6, 'child three': 9}, 'parent three': {'child one': 11, 'child two': 14}, 'no parent': 17, 'no children': 20}, 'row two': {'parent one': {'child one': 2}, 'parent two': {'child one': 4, 'child two': 7, 'child three': None}, 'parent three': {'child one': 12, 'child two': 15}, 'no parent': 18, 'no children': 21}, 'row three': {
+            'parent one': {'child one': None}, 'parent two': {'child one': 5, 'child two': 7, 'child three': 10}, 'parent three': {'child one': 13, 'child two': 16}, 'no parent': 19, 'no children': 22}}
+
+        self.maxDiff = None
         book = workbookOperations.openWorkbook(TEST_SHEET)
 
-        sheet = book['Sheet1']
+        sheet1 = book['Sheet1']
 
-        result = sheetOperations.parseSheet(sheet, lastHeaderRow=2)
+        result = sheetOperations.parseSheet(sheet1, lastHeaderRow=2)
 
-        self.assertDictEqual(result, {'row one': {'parent one': {'child one': 1}, 'parent two': {'child one': 3, 'child two': 6, 'child three': 9}, 'parent three': {'child one': 11, 'child two': 14}, 'no parent': 17, 'no children': 20}, 'row two': {'parent one': {'child one': 2}, 'parent two': {'child one': 4, 'child two': 7, 'child three': None}, 'parent three': {'child one': 12, 'child two': 15}, 'no parent': 18, 'no children': 21}, 'row three': {
-                             'parent one': {'child one': None}, 'parent two': {'child one': 5, 'child two': 7, 'child three': 10}, 'parent three': {'child one': 13, 'child two': 16}, 'no parent': 19, 'no children': 22}})
+        self.assertDictEqual(expectedResult, result,
+                             msg="\n\nresult is:\n{}\n\n".format(result))
+        sheet2 = book['Sheet2']
+
+        result = sheetOperations.parseSheet(
+            sheet2, firstHeaderRow=4, lastHeaderRow=5)
+
+        self.assertDictEqual(expectedResult, result,
+                             msg="\n\nresult is:\n{}\n\n".format(result))
 
 
 if __name__ == '__main__':

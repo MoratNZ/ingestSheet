@@ -67,7 +67,7 @@ def parseSheet(sheet, firstHeaderRow=1, lastHeaderRow=1, labelColumn=1, maxColum
     headers = parseHeaders(sheet, firstHeaderRow, lastHeaderRow,
                            labelColumn, maxColumnGap, camelCaseHeaders)
 
-    for rowIndex in range(lastHeaderRow + 1, sheet.max_row):
+    for rowIndex in range(lastHeaderRow + 1, sheet.max_row+1):
         labelCell = sheet.cell(row=rowIndex, column=labelColumn)
 
         if isEmptyCell(labelCell):
