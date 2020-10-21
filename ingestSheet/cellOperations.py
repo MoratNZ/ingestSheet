@@ -36,6 +36,11 @@ def isChildMergedCell(cell):
 
 def getCellValue(cell):
     if isChildMergedCell(cell):
-        return getCellValue(cell.parent.cell(row=cell.row, column=(cell.column - 1)))
+        column = cell.column
+        if column = 1:
+            raise Exception(
+                "Weird - cell at column {}, row {} thinks it's a child merged cell but it's in column 1".format(column, cell.row))
+        else:
+            return getCellValue(cell.parent.cell(row=cell.row, column=(cell.column - 1)))
     else:
         return cell.value
