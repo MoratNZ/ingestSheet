@@ -27,3 +27,17 @@ def insertIntoDict(targetDict, headerArray, value):
             nextDict, headerArray[:-1], value)
 
         return targetDict
+
+
+def makeCamelCase(string):
+    string = string.replace("_", " ")
+    words = string.split(" ")
+
+    if len(words) < 2:
+        return string.lower()
+    else:
+        capitalisedWords = [word.title()
+                            for word in words[1:]]
+        capitalisedWords.insert(0, words[0].lower())
+
+        return "".join(capitalisedWords)

@@ -16,7 +16,8 @@ class TestRowOperations(unittest.TestCase):
 
         sheet = book['Sheet1']
 
-        headers = sheetOperations.parseHeaders(sheet, headerRowCount=2)
+        headers = sheetOperations.parseHeaders(
+            sheet, lastHeaderRow=2)
 
         row1 = sheet[3]
         result1 = rowOperations.parseRow(headers, row1)

@@ -4,34 +4,47 @@ import json
 
 from .cellOperations import isEmptyCell, isChildMergedCell, getCellValue
 from .rowOperations import parseRow
+from .utility import makeCamelCase
 
 
-def parseHeaders(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
-    """[summary]
+def parseHeaders(sheet, firstHeaderRow=1, lastHeaderRow=1, labelColumn=1, maxColumnGap=1, camelCaseHeaders=False):
+    """Takes an excel sheet, and returns a representation of the header rows.
 
     Args:
-        sheet ([type]): [description]
-        headerRowCount (int, optional): [description]. Defaults to 1.
-        headerColumnCount (int, optional): [description]. Defaults to 1.
-        maxColumnGap (int, optional): [description]. Defaults to 1.
+        sheet ([type]): An openpyxl worksheet object
+        firstHeaderRow (int, optional): The first row that contains headers. Defaults to 1.
+        lastHeaderRow (int, optional): The last row that contains headers. Defaults to the value of firstHeaderRow.
+        labelColumn (int, optional): The column number that contains row labels . Defaults to 1.
+        maxColumnGap (int, optional): The maximum number of blank columns allowed within the data. If more than this number of
+            blank columns are encountered, data is assumed to be finished. Defaults to 1.
+        camelCaseHeaders (bool, optional): Transform the headers into camelCase. Defaults to False.
 
     Returns:
-        list of lists: [description]
+        list of lists: one list per column, with each inner list containing the values of the header cells (with merged cells expanded)
     """
-    currentColumn = headerColumnCount + 1
+
+    if lastHeaderRow < firstHeaderRow:
+        lastHeaderRow = firstHeaderRow
+
+    currentColumn = labelColumn + 1
     blankColumns = 0
 
     returnArray = []
 
-    for i in range(headerColumnCount):
+    for i in range(labelColumn):
         returnArray.append(None)
 
     while True:
         columnArray = []
-        for currentRow in range(headerRowCount, 0, -1):
+        for currentRow in range(lastHeaderRow, firstHeaderRow - 1, -1):
             currentCell = sheet.cell(row=currentRow, column=currentColumn)
             if not isEmptyCell(currentCell):
-                columnArray.append(getCellValue(currentCell))
+                cellValue = getCellValue(currentCell)
+
+                if camelCaseHeaders:
+                    columnArray.append(makeCamelCase(cellValue))
+                else:
+                    columnArray.append(cellValue)
 
         if len(columnArray) == 0:
             blankColumns += 1
@@ -48,14 +61,14 @@ def parseHeaders(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
     return returnArray
 
 
-def parseSheet(sheet, headerRowCount=1, headerColumnCount=1, maxColumnGap=1):
+def parseSheet(sheet, firstHeaderRow=1, lastHeaderRow=1, labelColumn=1, maxColumnGap=1, camelCaseHeaders=False):
     result = {}
 
-    headers = parseHeaders(sheet, headerRowCount,
-                           headerColumnCount, maxColumnGap)
+    headers = parseHeaders(sheet, firstHeaderRow, lastHeaderRow,
+                           labelColumn, maxColumnGap, camelCaseHeaders)
 
-    for rowIndex in range(headerRowCount + 1, sheet.max_row):
-        labelCell = sheet.cell(row=rowIndex, column=headerColumnCount)
+    for rowIndex in range(lastHeaderRow + 1, sheet.max_row):
+        labelCell = sheet.cell(row=rowIndex, column=labelColumn)
 
         if isEmptyCell(labelCell):
             continue
