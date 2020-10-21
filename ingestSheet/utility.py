@@ -11,7 +11,10 @@ def insertIntoDict(targetDict, headerArray, value):
     Returns:
         dict: The dictt passed in, now with the value inserted into the appropriate place in its child hierachy
     """
-    if len(headerArray) == 1:
+    if len(headerArray) == 0:
+        raise ValueError("Empty header array passed to insertIntoDict")
+
+    elif len(headerArray) == 1:
         targetDict[headerArray[0]] = value
 
         return targetDict

@@ -29,6 +29,9 @@ class TestUtility(unittest.TestCase):
         self.assertDictEqual(
             result3, {'third': {'second': {'first': 'value'}}, 'steve': 'foo'}, msg=result)
 
+        with self.assertRaises(ValueError):
+            result4 = utility.insertIntoDict({}, [], "bob")
+
     def test_makeCamelCase(self):
         self.assertEqual(utility.makeCamelCase("Hello world"), "helloWorld")
         self.assertEqual(utility.makeCamelCase("Hello"), "hello")
