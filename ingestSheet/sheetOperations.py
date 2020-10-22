@@ -26,12 +26,12 @@ def parseHeaders(sheet, firstHeaderRow=1, lastHeaderRow=1, labelColumn=1, maxCol
     if lastHeaderRow < firstHeaderRow:
         lastHeaderRow = firstHeaderRow
 
-    currentColumn = labelColumn + 1
+    currentColumn = labelColumn
     blankColumns = 0
 
     returnArray = []
 
-    for i in range(labelColumn):
+    for i in range(labelColumn - 1):
         returnArray.append(None)
 
     while True:
