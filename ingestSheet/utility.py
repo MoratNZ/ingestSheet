@@ -11,6 +11,12 @@ def insertIntoDict(targetDict, headerArray, value):
     Returns:
         dict: The dictt passed in, now with the value inserted into the appropriate place in its child hierachy
     """
+    if targetDict is None:
+        raise ValueError(
+            "'None' passed to insertIntoDict as targetDict, instead of Dict")
+    if headerArray is None:
+        raise ValueError(
+            "'None' passed to insertIntoDict as headerArray, instead of list")
     if len(headerArray) == 0:
         raise ValueError("Empty header array passed to insertIntoDict")
 

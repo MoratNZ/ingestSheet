@@ -32,6 +32,9 @@ class TestUtility(unittest.TestCase):
         with self.assertRaises(ValueError):
             result4 = utility.insertIntoDict({}, [], "bob")
 
+        with self.assertRaises(ValueError):
+            result4 = utility.insertIntoDict(None, headerArray, "value")
+
     def test_makeCamelCase(self):
         self.assertEqual(utility.makeCamelCase("Hello world"), "helloWorld")
         self.assertEqual(utility.makeCamelCase("Hello"), "hello")
