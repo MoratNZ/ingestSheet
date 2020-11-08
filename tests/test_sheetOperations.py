@@ -35,6 +35,13 @@ class TestSheetOperations(unittest.TestCase):
         self.assertCountEqual(headers3, [['rowNumber'], ['childOne', 'parentOne'], ['childOne', 'parentTwo'], ['childTwo', 'parentTwo'], [
                               'childThree', 'parentTwo'], ['childOne', 'parentThree'], ['childTwo', 'parentThree'], ['noParent'], ['noChildren']])
 
+        sheet3 = book['Sheet3']
+        headers4 = sheetOperations.parseHeaders(
+            sheet3, firstHeaderRow=4, lastHeaderRow=5)
+        self.assertEqual(len(headers4), 9, msg=headers4)
+        self.assertCountEqual(headers4, [['row number', 'parent one'], ['child one', 'parent one'], ['child one', 'parent two'], ['child two', 'parent two'], [
+                              'child three', 'parent two'], ['child one', 'parent three'], ['child two', 'parent three'], ['no parent'], ['no children']])
+
     def test_parseSheet(self):
         expectedResult = {
             'row one': {'row number': 'row one', 'parent one': {'child one': 1}, 'parent two': {'child one': 3, 'child two': 6, 'child three': 9}, 'parent three': {'child one': 11, 'child two': 14}, 'no parent': 17, 'no children': 20},
