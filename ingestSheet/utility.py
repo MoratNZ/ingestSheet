@@ -27,7 +27,7 @@ def insertIntoDict(targetDict, headerArray, value):
     else:
         nextHeader = headerArray[-1]
 
-        if nextHeader not in targetDict:
+        if nextHeader not in targetDict or not isinstance(targetDict[nextHeader], dict):
             targetDict[nextHeader] = {}
 
         nextDict = targetDict[nextHeader]
