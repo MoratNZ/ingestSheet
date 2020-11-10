@@ -20,6 +20,14 @@ class TestSheetOperations(unittest.TestCase):
         self.assertEqual(len(headers), 9, msg=headers)
         self.assertCountEqual(headers, [['row number'], ['child one', 'parent one'], ['child one', 'parent two'], ['child two', 'parent two'], [
                               'child three', 'parent two'], ['child one', 'parent three'], ['child two', 'parent three'], ['no parent'], ['no children']])
+
+        headers1a = sheetOperations.parseHeaders(
+            sheet1, lastHeaderRow=2, maxColumnGap=0)
+
+        self.assertEqual(len(headers1a), 9, msg=headers)
+        self.assertCountEqual(headers1a, [['row number'], ['child one', 'parent one'], ['child one', 'parent two'], ['child two', 'parent two'], [
+                              'child three', 'parent two'], ['child one', 'parent three'], ['child two', 'parent three'], ['no parent'], ['no children']])
+
         sheet2 = book['Sheet2']
         headers2 = sheetOperations.parseHeaders(
             sheet2, firstHeaderRow=4, lastHeaderRow=5)
@@ -27,7 +35,12 @@ class TestSheetOperations(unittest.TestCase):
         self.assertEqual(len(headers2), 9, msg=headers2)
         self.assertCountEqual(headers2, [['row number'], ['child one', 'parent one'], ['child one', 'parent two'], ['child two', 'parent two'], [
                               'child three', 'parent two'], ['child one', 'parent three'], ['child two', 'parent three'], ['no parent'], ['no children']])
+        headers2a = sheetOperations.parseHeaders(
+            sheet2, firstHeaderRow=4, lastHeaderRow=5, maxColumnGap=0)
 
+        self.assertEqual(len(headers2a), 9, msg=headers2)
+        self.assertCountEqual(headers2a, [['row number'], ['child one', 'parent one'], ['child one', 'parent two'], ['child two', 'parent two'], [
+                              'child three', 'parent two'], ['child one', 'parent three'], ['child two', 'parent three'], ['no parent'], ['no children']])
         headers3 = sheetOperations.parseHeaders(
             sheet2, firstHeaderRow=4, lastHeaderRow=5, camelCaseHeaders=True)
 
