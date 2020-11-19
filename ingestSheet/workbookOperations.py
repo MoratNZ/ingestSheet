@@ -10,7 +10,7 @@ def openWorkbook(workbookName):
     Returns:
         openpyxl.workbook.workbook.Workbook: An openpyxl workbook object
     """
-    return openpyxl.load_workbook(filename=workbookName, read_only=True, data_only=True)
+    return openpyxl.load_workbook(filename=workbookName, data_only=True)
 
 
 def parseWorkbook(workbookName, sheetName=None):

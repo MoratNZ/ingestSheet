@@ -22,16 +22,13 @@ def isEmptyCell(cell):
 
 
 def isChildMergedCell(cell):
-    if isinstance(cell, openpyxl.cell.read_only.EmptyCell):
+    if not isinstance(cell, openpyxl.cell.MergedCell):
         return False
-    elif isinstance(cell, openpyxl.cell.read_only.ReadOnlyCell):
+    else:
         if cell.value is None:
             return True
         else:
             return False
-    else:
-        raise Exception(
-            "Code has reached a state it shouldn't be able to. Cell has type: {}".format(type(cell)))
 
 
 def getCellValue(cell):
